@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: uts-bi-dashboard
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    # 1 worker wajib: state analisis disimpan di memori proses. Thread dipakai untuk melayani banyak request.
+    startCommand: gunicorn uts_bi:app --workers 1 --threads 4 --timeout 300 --bind 0.0.0.0:$PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        generateValue: true
